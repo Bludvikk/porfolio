@@ -38,6 +38,7 @@ const bold = (s: string) =>
     <meta name="twitter:title" content={site.title} />
     <meta name="twitter:description" content={site.description} />
     <meta name="twitter:image" content={ogImage} />
+    <script is:inline>document.documentElement.classList.add('js')</script>
   </head>
   <body>
     <a class="skip" href="#mission">Skip to content</a>
@@ -52,7 +53,7 @@ const bold = (s: string) =>
           </div>
           <ul class="hud__links">
             {hud.nav.map((l) => (
-              <li><a href={l.href} class={l.accent ? 'accent' : undefined}>{l.label}</a></li>
+              <li><a href={l.href} class={l.accent ? 'glitch accent' : 'glitch'}>{l.label}<span class="glitch__layer" aria-hidden="true">{l.label}</span></a></li>
             ))}
           </ul>
         </nav>
@@ -66,9 +67,9 @@ const bold = (s: string) =>
             </h1>
             <p class="hero__tagline">{hero.taglineBefore}<mark>{hero.taglineHighlight}</mark>{hero.taglineAfter}</p>
             <div class="btns">
-              <a class="btn btn--primary" href={`mailto:${contact.email}`}>Email me ▸</a>
-              <a class="btn" href={resumeHref}>Résumé.pdf</a>
-              <a class="btn" href={contact.linkedin} rel="me noopener">LinkedIn</a>
+              <a class="btn btn--primary glitch" href={`mailto:${contact.email}`}>Email me ▸<span class="glitch__layer" aria-hidden="true">Email me ▸</span></a>
+              <a class="btn glitch" href={resumeHref}>Résumé.pdf<span class="glitch__layer" aria-hidden="true">Résumé.pdf</span></a>
+              <a class="btn glitch" href={contact.linkedin} rel="me noopener">LinkedIn<span class="glitch__layer" aria-hidden="true">LinkedIn</span></a>
             </div>
           </div>
 
@@ -89,8 +90,8 @@ const bold = (s: string) =>
     {flags.showFigures && (
       <div class="figures">
         <dl class="wrap" aria-label="Key figures">
-          {figures.map((f) => (
-            <div><dt>{f.label}</dt><dd>{f.value}</dd></div>
+          {figures.map((f, i) => (
+            <div data-reveal style={`--i:${i}`}><dt>{f.label}</dt><dd data-count>{f.value}</dd></div>
           ))}
         </dl>
       </div>
@@ -98,35 +99,35 @@ const bold = (s: string) =>
 
     <main class="wrap">
       <section id="mission" class="section mission" aria-labelledby="mission-label">
-        <div class="mission__meta">
+        <div class="mission__meta" data-reveal="wipe">
           <h2 id="mission-label" class="section-label">{mission.label}</h2>
           <span>{mission.meta}</span>
         </div>
 
         <div class="mission__intro">
-          <span class="mission__op">{mission.op}</span>
-          <h3 class="mission__headline">{mission.headline} <span class="red">{mission.headlineAccent}</span></h3>
-          <p class="mission__lead">{mission.lead}</p>
+          <span class="mission__op" data-reveal="wipe">{mission.op}</span>
+          <h3 class="mission__headline" data-reveal>{mission.headline} <span class="red">{mission.headlineAccent}</span></h3>
+          <p class="mission__lead" data-reveal style="--i:1">{mission.lead}</p>
         </div>
 
         <div class="boxes">
-          {mission.boxes.map((b) => (
-            <div class="box"><h4>{b.title}</h4><p>{b.body}</p></div>
+          {mission.boxes.map((b, i) => (
+            <div class="box" data-reveal style={`--i:${i}`}><h4>{b.title}</h4><p>{b.body}</p></div>
           ))}
         </div>
 
-        <dl class="results">
+        <dl class="results" data-reveal>
           {mission.results.map((r) => (
-            <div><dt>{r.label}</dt><dd class={r.accent ? 'red' : undefined}>{r.value}</dd></div>
+            <div><dt>{r.label}</dt><dd class={r.accent ? 'red' : undefined} data-count>{r.value}</dd></div>
           ))}
         </dl>
       </section>
 
       <section id="contracts" class="section" aria-labelledby="contracts-label">
-        <h2 id="contracts-label" class="section-label">{contracts.label}</h2>
+        <h2 id="contracts-label" class="section-label" data-reveal="wipe">{contracts.label}</h2>
         <div class="roles">
-          {contracts.roles.map((r) => (
-            <article class="role">
+          {contracts.roles.map((r, i) => (
+            <article class="role" data-reveal={i % 2 ? 'right' : 'left'} style={`--i:${i % 2}`}>
               <div class="role__inner">
                 <div class="role__meta"><span class="red">{r.company}</span><span>{r.years}</span></div>
                 <h3>{r.title}</h3>
@@ -139,14 +140,14 @@ const bold = (s: string) =>
       </section>
 
       <section id="loadout" class="section" aria-labelledby="loadout-label">
-        <h2 id="loadout-label" class="section-label">{loadout.label}</h2>
+        <h2 id="loadout-label" class="section-label" data-reveal="wipe">{loadout.label}</h2>
         <div class="loadout">
           <div class="stack">
-            {loadout.stack.map((s) => (
-              <div class="stack__row">
+            {loadout.stack.map((s, i) => (
+              <div class="stack__row" data-reveal="left" style={`--i:${i}`}>
                 <h3 class="stack__cat">{s.category}</h3>
                 <ul class={s.highlight ? 'chips chips--hot' : 'chips'}>
-                  {s.items.map((i) => <li>{i}</li>)}
+                  {s.items.map((it) => <li>{it}</li>)}
                 </ul>
               </div>
             ))}
@@ -154,12 +155,12 @@ const bold = (s: string) =>
 
           <div class="side">
             <ul class="edu">
-              {loadout.education.map((e) => (
-                <li><h3>{e.title}</h3><span>{e.detail}</span></li>
+              {loadout.education.map((e, i) => (
+                <li data-reveal="right" style={`--i:${i}`}><h3>{e.title}</h3><span>{e.detail}</span></li>
               ))}
             </ul>
             {flags.showProjects && (
-              <div class="sideops">
+              <div class="sideops" data-reveal="right" style="--i:1">
                 <h3>{loadout.sideOps.label}</h3>
                 <p set:html={bold(loadout.sideOps.text)} />
               </div>
@@ -169,18 +170,42 @@ const bold = (s: string) =>
       </section>
 
       <footer id="contact" class="contact">
-        <span class="contact__label">{footer.label}</span>
-        <h2 class="contact__headline">{footer.headline} <span class="red">{footer.headlineAccent}</span></h2>
+        <span class="contact__label" data-reveal="wipe">{footer.label}</span>
+        <h2 class="contact__headline" data-reveal>{footer.headline} <span class="red">{footer.headlineAccent}</span></h2>
         <ul class="contact__links">
-          <li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
-          <li><a href={contact.linkedin} rel="me noopener">{contact.linkedinLabel}</a></li>
-          <li><a href={resumeHref}>Résumé.pdf</a></li>
+          <li data-reveal style="--i:0"><a class="glitch" href={`mailto:${contact.email}`}>{contact.email}<span class="glitch__layer" aria-hidden="true">{contact.email}</span></a></li>
+          <li data-reveal style="--i:1"><a class="glitch" href={contact.linkedin} rel="me noopener">{contact.linkedinLabel}<span class="glitch__layer" aria-hidden="true">{contact.linkedinLabel}</span></a></li>
+          <li data-reveal style="--i:2"><a class="glitch" href={resumeHref}>Résumé.pdf<span class="glitch__layer" aria-hidden="true">Résumé.pdf</span></a></li>
         </ul>
-        <div class="contact__bar">
+        <div class="contact__bar" data-reveal="wipe">
           <span>{footer.copyright}</span>
           <span class="red">{footer.eof}</span>
         </div>
       </footer>
     </main>
+
+    <script is:inline>
+      (() => {
+        const els = document.querySelectorAll('[data-reveal]');
+        const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const count = (el) => {
+          const m = el.textContent.match(/^(\d+)(.*)$/s);
+          if (!m || still || /^[–-]/.test(m[2])) return;
+          const end = +m[1], rest = m[2], t0 = performance.now(), dur = 900;
+          const tick = (t) => {
+            const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+            el.textContent = Math.round(end * e) + rest;
+            if (k < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        };
+        const show = (el) => { el.classList.add('in'); el.querySelectorAll('[data-count]').forEach(count); };
+        if (still || !('IntersectionObserver' in window)) { els.forEach((el) => el.classList.add('in')); return; }
+        const io = new IntersectionObserver((entries) => {
+          for (const e of entries) if (e.isIntersecting) { show(e.target); io.unobserve(e.target); }
+        }, { rootMargin: '0px 0px -40px 0px', threshold: 0.12 });
+        els.forEach((el) => io.observe(el));
+      })();
+    </script>
   </body>
 </html>
