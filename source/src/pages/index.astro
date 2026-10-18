@@ -1,0 +1,186 @@
+---
+import '@fontsource/big-shoulders-display/latin-700';
+import '@fontsource/big-shoulders-display/latin-900';
+import '@fontsource/chakra-petch/latin-400';
+import '@fontsource/chakra-petch/latin-500';
+import '@fontsource/chakra-petch/latin-600';
+import '@fontsource/chakra-petch/latin-700';
+import '@fontsource/share-tech-mono/latin-400';
+import '../styles/global.css';
+import { flags, site, contact, hud, hero, figures, mission, contracts, loadout, footer } from '../data/profile';
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const resumeHref = base + contact.resume;
+const ogImage = new URL('og.png', site.url).href;
+
+// Turn **bold** segments into <strong>
+const bold = (s: string) =>
+  s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{site.title}</title>
+    <meta name="description" content={site.description} />
+    <meta name="theme-color" content="#070707" />
+    <link rel="canonical" href={site.url} />
+    <link rel="icon" href={base + 'favicon.svg'} type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={site.title} />
+    <meta property="og:description" content={site.description} />
+    <meta property="og:url" content={site.url} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={site.title} />
+    <meta name="twitter:description" content={site.description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body>
+    <a class="skip" href="#mission">Skip to content</a>
+    {flags.showScanlines && <div class="scanlines" aria-hidden="true"></div>}
+
+    <div class="top">
+      <div class="wrap">
+        <nav class="hud" aria-label="Primary">
+          <div class="hud__left">
+            <span class="hud__tag">{hud.tag}</span>
+            <span class="hud__status">{hud.status}</span>
+          </div>
+          <ul class="hud__links">
+            {hud.nav.map((l) => (
+              <li><a href={l.href} class={l.accent ? 'accent' : undefined}>{l.label}</a></li>
+            ))}
+          </ul>
+        </nav>
+
+        <header class="hero">
+          <div class="hero__main">
+            <p class="hero__kicker" style="margin:0">{hero.kicker}<span class="cursor" aria-hidden="true"></span></p>
+            <h1 class="hero__name">
+              <span class="hero__first">{hero.firstName}</span>
+              <span class="hero__last">{hero.lastName}</span>
+            </h1>
+            <p class="hero__tagline">{hero.taglineBefore}<mark>{hero.taglineHighlight}</mark>{hero.taglineAfter}</p>
+            <div class="btns">
+              <a class="btn btn--primary" href={`mailto:${contact.email}`}>Email me ▸</a>
+              <a class="btn" href={resumeHref}>Résumé.pdf</a>
+              <a class="btn" href={contact.linkedin} rel="me noopener">LinkedIn</a>
+            </div>
+          </div>
+
+          <aside class="idcard" aria-label="Operator ID">
+            <div class="idcard__inner">
+              <div class="idcard__head"><span>{hero.idCard.id}</span><span>{hero.idCard.badge}</span></div>
+              <dl>
+                {hero.idCard.rows.map(([k, v]) => (
+                  <div><dt>{k}</dt><dd>{v}</dd></div>
+                ))}
+              </dl>
+            </div>
+          </aside>
+        </header>
+      </div>
+    </div>
+
+    {flags.showFigures && (
+      <div class="figures">
+        <dl class="wrap" aria-label="Key figures">
+          {figures.map((f) => (
+            <div><dt>{f.label}</dt><dd>{f.value}</dd></div>
+          ))}
+        </dl>
+      </div>
+    )}
+
+    <main class="wrap">
+      <section id="mission" class="section mission" aria-labelledby="mission-label">
+        <div class="mission__meta">
+          <h2 id="mission-label" class="section-label">{mission.label}</h2>
+          <span>{mission.meta}</span>
+        </div>
+
+        <div class="mission__intro">
+          <span class="mission__op">{mission.op}</span>
+          <h3 class="mission__headline">{mission.headline} <span class="red">{mission.headlineAccent}</span></h3>
+          <p class="mission__lead">{mission.lead}</p>
+        </div>
+
+        <div class="boxes">
+          {mission.boxes.map((b) => (
+            <div class="box"><h4>{b.title}</h4><p>{b.body}</p></div>
+          ))}
+        </div>
+
+        <dl class="results">
+          {mission.results.map((r) => (
+            <div><dt>{r.label}</dt><dd class={r.accent ? 'red' : undefined}>{r.value}</dd></div>
+          ))}
+        </dl>
+      </section>
+
+      <section id="contracts" class="section" aria-labelledby="contracts-label">
+        <h2 id="contracts-label" class="section-label">{contracts.label}</h2>
+        <div class="roles">
+          {contracts.roles.map((r) => (
+            <article class="role">
+              <div class="role__inner">
+                <div class="role__meta"><span class="red">{r.company}</span><span>{r.years}</span></div>
+                <h3>{r.title}</h3>
+                <p>{r.summary}</p>
+                <ul>{r.bullets.map((b) => <li><span>{b}</span></li>)}</ul>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="loadout" class="section" aria-labelledby="loadout-label">
+        <h2 id="loadout-label" class="section-label">{loadout.label}</h2>
+        <div class="loadout">
+          <div class="stack">
+            {loadout.stack.map((s) => (
+              <div class="stack__row">
+                <h3 class="stack__cat">{s.category}</h3>
+                <ul class={s.highlight ? 'chips chips--hot' : 'chips'}>
+                  {s.items.map((i) => <li>{i}</li>)}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div class="side">
+            <ul class="edu">
+              {loadout.education.map((e) => (
+                <li><h3>{e.title}</h3><span>{e.detail}</span></li>
+              ))}
+            </ul>
+            {flags.showProjects && (
+              <div class="sideops">
+                <h3>{loadout.sideOps.label}</h3>
+                <p set:html={bold(loadout.sideOps.text)} />
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <footer id="contact" class="contact">
+        <span class="contact__label">{footer.label}</span>
+        <h2 class="contact__headline">{footer.headline} <span class="red">{footer.headlineAccent}</span></h2>
+        <ul class="contact__links">
+          <li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
+          <li><a href={contact.linkedin} rel="me noopener">{contact.linkedinLabel}</a></li>
+          <li><a href={resumeHref}>Résumé.pdf</a></li>
+        </ul>
+        <div class="contact__bar">
+          <span>{footer.copyright}</span>
+          <span class="red">{footer.eof}</span>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>
